@@ -10,7 +10,7 @@ end
         _TTF_Quit();
     end
     finalize
-        _fnt = _TTF_OpenFont("../assets/fonts/Deutsch.ttf", 40);
+        _fnt = _TTF_OpenFont("../fonts/Deutsch.ttf", 40);
     with
         _TTF_CloseFont(_fnt);
     
