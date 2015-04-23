@@ -1,0 +1,38 @@
+#define cpyclr(d,s); d.r = s.r;d.g = s.g;d.b = s.b;d.a = s.a;
+class Button with
+    interface Rect;
+    var _SDL_Color clr;
+    var _SDL_Color clr_hover;
+    var _SDL_Color clr_lclick;
+    var _SDL_Color clr_rclick;
+do
+    var _SDL_Color draw_color;
+    //cpyclr(draw_color,clr);
+    var SDLRect rect with
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+    end;
+    par do
+        every rect.mouse_enter do
+            //cpyclr(draw_color,clr_hover);
+            emit mouse_enter;
+        end
+    with
+        every rect.mouse_press do
+            //draw_color = clr_lclick;
+            emit mouse_press;
+        end
+    with
+        every rect.mouse_release do
+            //draw_color = clr_rclick;
+            emit mouse_release;
+        end
+    with
+        every rect.mouse_leave do
+            //draw_color = clr;
+            emit mouse_leave;
+        end
+    end
+end

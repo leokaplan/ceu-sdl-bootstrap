@@ -1,0 +1,17 @@
+#define load(tex,path) finalize tex = _IMG_LoadTexture(_REN, path); with _SDL_DestroyTexture(tex); end _assert(tex != null); 
+#include "sdl-colors.ceu"
+
+native do
+    TTF_Font* fnt;
+end
+    
+    _TTF_Init();
+    finalize with
+        _TTF_Quit();
+    end
+    finalize
+        _fnt = _TTF_OpenFont("../assets/fonts/Deutsch.ttf", 40);
+    with
+        _TTF_CloseFont(_fnt);
+    
+    end

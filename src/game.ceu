@@ -1,0 +1,17 @@
+class Game with
+    interface Screen;
+do
+    var Button b with
+        this.clr.r = 0;
+        this.clr.g = 0;
+        this.clr.b = 0;
+        this.x = _WIN_W/2;
+        this.y = _WIN_H/2;
+        this.w = 100;
+        this.h = 100;
+    end;
+    every b.mouse_press do
+        _printf("hi\n");
+        emit ok;
+    end
+end

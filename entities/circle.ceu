@@ -1,0 +1,4 @@
+interface Circle with
+    interface Entity;
+    var int r;
+end

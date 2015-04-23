@@ -1,0 +1,68 @@
+input void SDL_REDRAW;
+input void SDL_QUIT;
+input int SDL_DT;
+#include "../ceu-sdl/C/c.ceu"
+#include "../ceu-sdl/sdl.ceu"
+#include "../ceu-sdl/sdl-gfx.ceu"
+#include "../entities/entity.ceu"
+#include "../entities/circle.ceu"
+#include "../entities/rect.ceu"
+#include "../entities/screen.ceu"
+#include "../ceu-sdl/sdlcircle.ceu"
+#include "../ceu-sdl/sdlrect.ceu"
+#include "../components/button.ceu"
+#include "../src/game.ceu"
+native do
+    SDL_Renderer* REN = NULL;
+    int WIN_W, WIN_H;
+end
+
+_srand(_time(null));
+
+var _SDL_Window[] win;
+    finalize
+        win = _SDL_CreateWindow("SDL", _SDL_WINDOWPOS_CENTERED,
+                                         _SDL_WINDOWPOS_CENTERED,
+                                         800, 480,
+                                         _SDL_WINDOW_SHOWN);
+    with
+        _SDL_DestroyWindow(win);
+    end
+
+_SDL_GetWindowSize(win, &_WIN_W, &_WIN_H);
+
+finalize
+    _REN = _SDL_CreateRenderer(win, -1, 0);
+with
+    _SDL_DestroyRenderer(_REN);
+end
+
+var _SDL_Rect bg;
+    bg.w = _WIN_W;
+    bg.h = _WIN_H;
+    bg.x = 0;
+    bg.y = 0;
+
+var _SDL_Color bg_clr;
+    bg_clr.r = 0x00;
+    bg_clr.g = 0x00;
+    bg_clr.b = 0x00;
+
+par/or do
+    await SDL_QUIT;
+with
+    every SDL_REDRAW do
+        _SDL_SetRenderDrawColor(_REN, bg_clr.r,bg_clr.g,bg_clr.b,0xFF);
+        _SDL_RenderFillRect(_REN, &bg);
+    end
+with
+    loop do
+        do Game;
+    end
+with
+    every SDL_REDRAW do
+        _SDL_RenderPresent(_REN);
+    end
+end
+
+escape 0;

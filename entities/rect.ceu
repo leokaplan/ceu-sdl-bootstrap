@@ -1,0 +1,5 @@
+interface Rect with
+    interface Entity;
+    var int w;
+    var int h;
+end

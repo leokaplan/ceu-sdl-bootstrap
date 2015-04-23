@@ -1,0 +1,55 @@
+input _SDL_MouseButtonEvent* SDL_MOUSEBUTTONDOWN;
+input _SDL_MouseButtonEvent* SDL_MOUSEBUTTONUP;
+input _SDL_MouseMotionEvent* SDL_MOUSEMOTION;
+
+
+class SDLCircle with
+    interface Circle;
+do
+    var _SDL_Point p;
+        p.x = x;
+        p.y = y;
+    par do
+        var _SDL_MouseButtonEvent* c;
+        every c in SDL_MOUSEBUTTONDOWN do
+            if _SDL_Circle_vs_Mouse(&p,r,c) then
+                emit mouse_press;
+#if 0
+                if click == left then
+                    emit lclick;
+                else/if click == right then
+                    emit rclick;
+                end
+#endif
+            end
+        end
+    with
+        var _SDL_MouseMotionEvent* m;
+        var bool wasout = true; 
+        every m in SDL_MOUSEMOTION do//ta invertido nao sei pq
+            var bool isout = _SDL_Circle_vs_Mouse(&p,r,m); 
+            if (not isout) and wasout then
+                wasout = false;
+                emit mouse_leave;
+            else/if isout and (not wasout) then 
+                wasout = true;
+                emit mouse_enter;
+            end
+        end
+  #if 0
+    with
+        var _SDL_TouchFingerEvent* touch;
+        var _SDL_Point p;
+        every touch in Touch do
+            _SDL_Touch2Point(&p,touch,1,1)
+            if _SDL_Rect_vs_Point(&rect,&p) then
+                emit lclick;
+            end
+        end
+#endif
+    with
+        every SDL_REDRAW do
+            _filledCircleRGBA(_REN, x,y,r,0xFF,0x00,0x00,0xFF);
+        end
+    end
+end

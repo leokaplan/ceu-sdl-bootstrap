@@ -1,0 +1,3 @@
+interface Screen with
+    event void ok;
+end;

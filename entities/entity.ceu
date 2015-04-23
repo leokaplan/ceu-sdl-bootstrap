@@ -1,0 +1,8 @@
+interface Entity with
+    var int x;
+    var int y;
+    event void mouse_press;
+    event void mouse_release;
+    event void mouse_enter;
+    event void mouse_leave;
+end

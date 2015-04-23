@@ -1,0 +1,62 @@
+input _SDL_MouseButtonEvent* SDL_MOUSEBUTTONDOWN;
+input _SDL_MouseButtonEvent* SDL_MOUSEBUTTONUP;
+input _SDL_MouseMotionEvent* SDL_MOUSEMOTION;
+
+
+class SDLRect with
+    interface Rect;
+do
+    var _SDL_Rect rect;
+        rect.x = x;
+        rect.y = y; 
+        rect.w = w; 
+        rect.h = h; 
+    par do
+        var _SDL_MouseButtonEvent* c;
+        every c in SDL_MOUSEBUTTONDOWN do
+            if _SDL_Rect_vs_Mouse(&rect,c) then
+                emit mouse_press;
+#if 0
+                if click == left then
+                    emit lclick;
+                else/if click == right then
+                    emit rclick;
+                end
+#endif
+            end
+        end
+    with
+        var _SDL_MouseMotionEvent* m;
+        var bool wasout = true; 
+        every m in SDL_MOUSEMOTION do//ta invertido nao sei pq
+            var bool isout = _SDL_Rect_vs_Mouse(&rect,m); 
+            if (not isout) and wasout then
+                wasout = false;
+                emit mouse_leave;
+            else/if isout and (not wasout) then 
+                wasout = true;
+                emit mouse_enter;
+            end
+        end
+  #if 0
+    with
+        var _SDL_TouchFingerEvent* touch;
+        var _SDL_Point p;
+        every touch in Touch do
+            _SDL_Touch2Point(&p,touch,1,1)
+            if _SDL_Rect_vs_Point(&rect,&p) then
+                emit lclick;
+            end
+        end
+#endif
+    with
+        every SDL_REDRAW do
+            rect.x = x; 
+            rect.y = y; 
+            rect.w = w; 
+            rect.h = h; 
+            _SDL_SetRenderDrawColor(_REN, 0xFF,0xFF,0,0xFF);
+            _SDL_RenderFillRect(_REN, &rect);
+        end
+    end
+end
